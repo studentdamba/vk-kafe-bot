@@ -136,12 +136,18 @@ def main():
         bot_info = vk.groups.getById()
         logger.info(f"Bot started for group: {bot_info[0]['name']}")
         print(f"✅ Бот запущен для группы: {bot_info[0]['name']}")
+        group_id = bot_info[0]['id']
     except Exception as e:
         logger.error(f"Failed to get bot info: {e}")
         print("⚠️ Не удалось получить информацию о группе")
+        print(f"Ошибка: {e}")
+        print("\n🔑 Проверьте VK_TOKEN в файле .env")
+        print("Получить токен можно в управлении сообществом VK → Работа с API → Создать ключ")
+        print("\n❌ Бот не может работать без корректного токена. Остановка.")
+        sys.exit(1)
     
     # Initialize Long Poll
-    longpoll = VkBotLongPoll(vk_session, bot_info[0]['id'])
+    longpoll = VkBotLongPoll(vk_session, group_id)
     logger.info("Long Poll initialized")
     
     print("\n🤖 Бот работает. Нажмите Ctrl+C для остановки.\n")
@@ -151,9 +157,11 @@ def main():
         for event in longpoll.listen():
             try:
                 if event.type == VkBotEventType.MESSAGE_NEW:
-                    vk_id = event.from_id
-                    peer_id = event.peer_id
-                    text = event.text.strip() if event.text else ""
+                    # Get message object from event
+                    message = event.obj.message
+                    vk_id = message['from_id']
+                    peer_id = message['peer_id']
+                    text = message.get('text', '').strip()
                     
                     with session_factory() as session:
                         # Handle user state first (for checkout and admin operations)

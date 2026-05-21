@@ -1,10 +1,11 @@
 ```
-# Dependencies
-.venv/
-venv/
+# Compiled Python files
+*.pyc
 __pycache__/
 
-# Environment variables
+# Virtual environments
+venv/
+.venv/
 .env
 .env.local
 *.env.*
@@ -12,20 +13,15 @@ __pycache__/
 # Logs
 *.log
 
-# IDE
+# Editor/IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# Python
-*.pyc
-*.pyo
-*.pyd
-__pycache__/
-.Python
-*.so
-.coverage
-coverage/
-htmlcov/
-.pytest_cache/
-.mypy_cache/
+# Build artifacts
+dist/
+build/
+*.out
 ```
